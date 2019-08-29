@@ -9,14 +9,19 @@ class App extends Component {
     this.state = {}
   }
 
-  fun() {
+  order(orderType) {
 
     const stuff = {
       "asset": "dodgecoin",
-      "orderType": "sell",
+      "orderType": orderType,
       "size": 11,
-      "ask": 0.3
     } 
+
+    if (orderType == "buy") {
+      stuff["bid"] = 0.3
+    } else {
+      stuff["ask"] = 0.3
+    }
 
     axios.post("http://localhost:8000/order/", stuff )
       .then(res => {
@@ -27,7 +32,10 @@ class App extends Component {
 
   render() {
     return(
-      <button onClick={ this.fun.bind(this) }>Go</button>
+      <div>
+        <button onClick={ this.order.bind(this, "buy") }>Buy</button>
+        <button onClick={ this.order.bind(this, "sell") }>Sell</button>
+      </div>
     )
   }
 }

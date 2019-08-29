@@ -6,7 +6,6 @@ from django.http import JsonResponse, HttpResponse
 
 # Create your views here.
 def order(request):
-	print("fired")
 	r = json.loads(request.body)
 
 	if r["orderType"] == "buy":
