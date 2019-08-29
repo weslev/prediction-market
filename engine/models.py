@@ -8,9 +8,9 @@ class Asset(models.Model):
 class Order(models.Model):
 	asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
 	size = models.IntegerField()
-	status = models.BooleanField()
+	status = models.BooleanField(default=False)
 	start = models.DateTimeField(auto_now_add=True)
-	end = models.DateTimeField(default=datetime.now, blank=True)
+	end = models.DateTimeField(null=True, blank=True)
 
 class BuyOrder(Order):
 	bid = models.FloatField()
