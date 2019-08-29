@@ -6,8 +6,8 @@ from django.http import JsonResponse, HttpResponse
 
 # Create your views here.
 def order(request):
+	print("fired")
 	r = json.loads(request.body)
-	r = json.loads(r)
 
 	if r["orderType"] == "buy":
 		assetID = Asset.objects.get(name=r["asset"])
