@@ -19,6 +19,8 @@ from engine import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("event/", views.createEvent),
+    path("player/", views.registerPlayer),
     path("order/", views.order),
     path("match/", views.match)
 ]
