@@ -22,5 +22,6 @@ urlpatterns = [
     path("event/", views.createEvent),
     path("player/", views.registerPlayer),
     path("order/", views.order),
-    path("match/", views.match)
+    path("match/", views.match),
+    path("oracle/", views.oracle)
 ]

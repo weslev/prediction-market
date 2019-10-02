@@ -4,6 +4,7 @@ import json
 from django.http import JsonResponse, HttpResponse
 import random
 from datetime import datetime 
+from django.core import serializers
 
 
 def createEvent(request):
@@ -198,3 +199,20 @@ def match(request):
 def engine(batch_size):
 	#if orders where order.status == active >= batch_size, match(orders where order.type = buy, orders where order.type = sell)
     print("hello")
+
+def oracle(request):
+    r = json.loads(request.body)
+    data_spec = r["spec"]
+    data_to_return = {}
+    if data_spec == "transactions":
+        txs = Transaction.objects.all()
+        i = 0
+        for tx in txs:
+            ob = {}
+            ob["event"] = tx.share.event.name
+            ob["side"] = tx.share.asset
+            ob["price"] = tx.price
+            data_to_return[i] = ob
+            i += 1
+    print(data_to_return)
+    return JsonResponse(data_to_return)

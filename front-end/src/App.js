@@ -1,42 +1,58 @@
 import React, { Component } from 'react';
 import axios from "axios";
+import M from 'materialize-css';
+import Card from "./Card.js";
+import Graph from "./Graph.js";
 
 
 class App extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {}
+
+    let url = window.location.href.split("/")
+    let participantID = url.pop()
+    let sessionID = url.pop()
+
+    this.state = {
+      "location": "main",
+      "user": participantID,
+      "data": {}
+    }
   }
 
-  order(orderType) {
+  componentDidMount() {
+    M.AutoInit();
+  }
 
-    const stuff = {
-      "asset": "dodgecoin",
-      "orderType": orderType,
-      "size": 11,
-    } 
+  nice() {
 
-    if (orderType == "buy") {
-      stuff["bid"] = 0.3
-    } else {
-      stuff["ask"] = 0.3
-    }
-
-    axios.post("http://localhost:8000/order/", stuff )
+    axios.post("http://localhost:8000/oracle/", {"spec": "transactions"} )
       .then(res => {
         console.log(res);
         console.log(res.data);
+        this.setState(res.data)
       })
   }
 
   render() {
-    return(
-      <div>
-        <button onClick={ this.order.bind(this, "buy") }>Buy</button>
-        <button onClick={ this.order.bind(this, "sell") }>Sell</button>
-      </div>
-    )
+    switch(this.state.location) {
+      case "login":
+        return(
+          <div>
+            <h2>Login</h2>
+          </div>
+        )
+      case "main":
+        return(
+          <div className="container">
+            <Card>
+              <Graph width={ 300 } height={ 300 } title={ "test1" } />
+            </Card>
+            <button onClick={ this.nice.bind(this) }>Test</button>
+          </div>
+        );
+    }
   }
 }
 
