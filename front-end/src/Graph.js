@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import M from 'materialize-css';
 import Plot from 'react-plotly.js';
 
-
+//https://towardsdatascience.com/plotly-experiments-bar-column-plots-71dd32eed7ef
 class Graph extends Component {
 
 	constructor(props) {
@@ -10,23 +10,22 @@ class Graph extends Component {
     }
 
     render() {
+    	console.log(this.props.title, this.props.data_vals)
     	return(
-			<Plot
+			<Plot className="col s6 m6 l6"
 				data={[
 					{
-						x: [0, 1, 2, 3, 4],
-						y: [0, 2, 6, 3, 5],
+						x: [...Array(this.props.data_vals.length).keys()],
+						y: this.props.data_vals,
 						mode: 'lines',
 						marker: {color: 'blue'},
 					}
 				]}
-				layout={
-					{ 
-						width: this.props.width, 
-						height: this.props.height, 
-						title: this.props.title
-					}
-				}
+				layout={{
+					"width": this.props.width, 
+					"height": this.props.height, 
+					"title": this.props.title
+				}}
 			/>
     	)
     }

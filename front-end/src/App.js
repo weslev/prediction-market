@@ -3,8 +3,11 @@ import axios from "axios";
 import M from 'materialize-css';
 import Card from "./Card.js";
 import Graph from "./Graph.js";
+/* eslint-disable no-unused-expressions */
 
-
+// Object.values(this.state.data).map((val) => {
+//   
+// }) 
 class App extends Component {
 
   constructor(props) {
@@ -29,10 +32,35 @@ class App extends Component {
 
     axios.post("http://localhost:8000/oracle/", {"spec": "transactions"} )
       .then(res => {
-        console.log(res);
-        console.log(res.data);
-        this.setState(res.data)
+        let ob = {}
+        Object.values(res.data).map((tx) => {
+          ob[tx["event"]] = {
+            "yes": [],
+            "no": []
+          }
+        })
+        Object.values(res.data).map((tx) => {
+          ob[tx["event"]][tx["side"]].push(tx["price"])
+        })
+        this.setState({
+          "data": ob
+        })
       })
+  }
+
+  generateCards() {
+    let components = []
+    Object.keys(this.state.data).map((key) => {
+      let graphs = []
+      Object.keys(this.state.data[key]).map((side) => {
+        let graph = <Graph width={ 300 } height={ 300 } title={ side } data_vals={ this.state.data[key][side] } />
+        graphs.push(graph)
+      })
+      let component = <Card>{ graphs }</Card>
+      components.push(component)
+    })
+
+    return components
   }
 
   render() {
@@ -44,14 +72,28 @@ class App extends Component {
           </div>
         )
       case "main":
-        return(
-          <div className="container">
-            <Card>
-              <Graph width={ 300 } height={ 300 } title={ "test1" } />
-            </Card>
-            <button onClick={ this.nice.bind(this) }>Test</button>
-          </div>
-        );
+        if (Object.keys(this.state.data).length > 0) {
+          return(
+            <div className="container">
+              <div className="row">
+                <button onClick={ this.nice.bind(this) }>Test</button>
+              </div>
+              <div className="row">
+                <div className="col s6 m6 l6">
+                  { this.generateCards() }
+                </div>
+              </div>
+            </div>
+          );
+        } else {
+          return(
+            <div className="container">
+                <div className="row">
+                  <button onClick={ this.nice.bind(this) }>Test</button>
+                </div>
+            </div>
+          )
+        }
     }
   }
 }
