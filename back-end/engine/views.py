@@ -210,7 +210,10 @@ def oracle(request):
         for tx in txs:
             ob = {}
             ob["event"] = tx.share.event.name
-            ob["side"] = tx.share.asset
+            if tx.share.asset == True:
+                ob["side"] = "yes"
+            else:
+                ob["side"] = "no"
             ob["price"] = tx.price
             data_to_return[i] = ob
             i += 1
