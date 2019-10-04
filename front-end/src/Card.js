@@ -21,7 +21,7 @@ class Card extends Component {
     let data = this.state
     axios.post("http://localhost:8000/order/", { data })
     .then(res => {
-      alert("success")
+      console.log(res)
     })
     e.target.reset();
     document.getElementById("test5").textContent = 0.5
@@ -68,7 +68,7 @@ class Card extends Component {
             <span>Buy</span>
           </label>
           <label className="col">
-            <input className="with-gap" type="radio" name="order_type" value="no" onChange={this.handleChange}/>
+            <input className="with-gap" type="radio" name="order_type" value="sell" onChange={this.handleChange}/>
             <span>Sell</span>
           </label>
         </div>

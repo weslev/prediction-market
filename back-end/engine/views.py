@@ -90,13 +90,11 @@ def registerPlayer(request):
 
 def order(request):
     r = json.loads(request.body)
-    print("1", r)
     r = r["data"]
-    print("2", r)
     player = r["player"]
-    if r["order_type"] == "yes":
+    if r["order_type"] == "buy":
         order_type = True
-    elif r["order_type"] == "no":
+    elif r["order_type"] == "sell":
         order_type = False
     else:
         order_type = r["order_type"] #buy or sell
@@ -111,27 +109,47 @@ def order(request):
     price = float(r["price"])
     event = r["event"]
 
-	#log order
-    OrderLog.objects.create(
-        player = Player.objects.get(name=player),
-        event = Event.objects.get(name=event),
-        quantity = quantity,
-        price = price,
-        side = side,
-        order_type = order_type
-    )
+    #default res value is sucess
+    res = "success"
 
-    for i in range(quantity):
-        Order.objects.create(
-            player = Player.objects.get(name=player),
-            event = Event.objects.get(name=event),
-            price = price,
-            status = True,
-            side = side,
-            order_type = order_type
-        )
+    #check for money if buy 
+    if order_type == True:
+        cap = Player.objects.get(name=player).capital
+        if cap > (price * quantity):
+            condo = True
+            if condo == True:
+                #log order
+                OrderLog.objects.create(
+                    player = Player.objects.get(name=player),
+                    event = Event.objects.get(name=event),
+                    quantity = quantity,
+                    price = price,
+                    side = side,
+                    order_type = order_type
+                )
 
-    return HttpResponse("success")
+                for i in range(quantity):
+                    Order.objects.create(
+                        player = Player.objects.get(name=player),
+                        event = Event.objects.get(name=event),
+                        price = price,
+                        status = True,
+                        side = side,
+                        order_type = order_type
+                    )
+                res = "buy order successfull"
+            else:
+                res = "failed bc you have too much capital at stake in other orders"
+        else:
+            res = "failed bc the cost of this order exceeds your current capital"
+    elif order_type == False:
+        player_id = Player.objects.get(name=player)
+        event_id = Player.objects.get(name=event)
+        shares_owned_by_me = Share.objects.filter(owner=player_id).filter(event=event_id)
+        print(shares_owned_by_me)
+        res = "sell order successfull"
+
+    return HttpResponse(res)
 
 def findBreakEvenIndex(buyers, sellers):
     breakEvenIndex = 0
@@ -209,6 +227,8 @@ def match(request):
     return HttpResponse(price)
 
 def engine(batch_size):
+    #engine loops through events for matching
+
 	#if orders where order.status == active >= batch_size, match(orders where order.type = buy, orders where order.type = sell)
     print("hello")
 
