@@ -10,7 +10,6 @@ class Graph extends Component {
     }
 
     render() {
-    	console.log(this.props.title, this.props.data_vals)
     	return(
 			<Plot className="col s6 m6 l6"
 				data={[

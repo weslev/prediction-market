@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import M from 'materialize-css';
-
+import axios from "axios";
 
 
 class Card extends Component {
@@ -9,8 +9,8 @@ class Card extends Component {
     super(props);
 
     this.state = {
-      "side": "",
-      "order_type": ""
+      "player": "lorenzo",
+      "event": this.props.title,
     }
 
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -18,7 +18,13 @@ class Card extends Component {
   }
 
   handleSubmit(e) {
-    console.log(this.state)
+    let data = this.state
+    axios.post("http://localhost:8000/order/", { data })
+    .then(res => {
+      alert("success")
+    })
+    e.target.reset();
+    document.getElementById("test5").textContent = 0.5
     e.preventDefault()
   }
 
@@ -28,9 +34,21 @@ class Card extends Component {
     })
   }
 
+  nice(event) {
+    let val = event.target.value
+    this.setState({
+      [event.target.name]: val
+    })
+    
+    document.getElementById("test5").textContent = val.toString()
+  }
+
   render() {
     return(
       <form onSubmit={ this.handleSubmit }>
+        <div className="row">
+          <h5 className="center-align">{ this.props.title } </h5>
+        </div>
         <div className="row">
           { this.props.children }
         </div>
@@ -55,7 +73,13 @@ class Card extends Component {
           </label>
         </div>
         <div className="row">
-          <input min={0} step={1} type="number" name="quantity" onChange={this.handleChange} />
+          <label>Size of the Order</label>
+          <input min={0} step={1} type="number" name="quantity" defaultValue="0" onChange={this.handleChange} />
+        </div>
+        <div className="row">
+          <label>Price</label>
+          <input name="price" type="range" min="0" max="1" defaultValue="0.5" step="0.01" onChange={ this.nice.bind(this) } />
+          <p id="test5" className="center-align">0.5</p>
         </div>
         <div className="row">
           <input className="btn" type="submit" />

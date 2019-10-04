@@ -90,14 +90,26 @@ def registerPlayer(request):
 
 def order(request):
     r = json.loads(request.body)
-    r = json.loads(r)
+    print("1", r)
+    r = r["data"]
+    print("2", r)
     player = r["player"]
-    order_type = r["order_type"] #buy or sell
-    asset  = r["side"]
-    quantity = r["quantity"]
-    price = r["price"]
+    if r["order_type"] == "yes":
+        order_type = True
+    elif r["order_type"] == "no":
+        order_type = False
+    else:
+        order_type = r["order_type"] #buy or sell
+
+    if r["side"] == "yes":
+        side = True
+    elif r["side"] == "no":
+        side = False
+    else:
+        side  = r["side"]
+    quantity = int(r["quantity"])
+    price = float(r["price"])
     event = r["event"]
-    side = r["side"]
 
 	#log order
     OrderLog.objects.create(
@@ -217,5 +229,5 @@ def oracle(request):
             ob["price"] = tx.price
             data_to_return[i] = ob
             i += 1
-    print(data_to_return)
+    # print(data_to_return)
     return JsonResponse(data_to_return)

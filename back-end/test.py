@@ -6,7 +6,7 @@ import time
 def newEvent():
 	stuff = {
 		"num_shares": 5,
-		"name": "election"
+		"name": "election3"
 	} 
 
 
@@ -26,7 +26,7 @@ def newPlayer(playerName):
 def newOrder(playerName, orderType):
 	stuff = {
         "player": playerName,
-        "event": "election",
+        "event": "election3",
         "quantity": 2,
         "price": random.uniform(0.1, 1),
         "status": True,
@@ -35,7 +35,7 @@ def newOrder(playerName, orderType):
 	} 
 
 
-	r = requests.post("http://localhost:8000/order/", json=json.dumps(stuff))
+	r = requests.post("http://localhost:8000/order/", json=json.dumps({"data": stuff}))
 
 def match():
 	r = requests.get("http://localhost:8000/match/")
@@ -45,11 +45,13 @@ def setup():
 	newEvent()
 	newPlayer("lorenzo")
 	newPlayer("lorenzo2")
-	for i in range(5):
-		newOrder("lorenzo", True)
-	for i in range(5):
-		newOrder("lorenzo2", False)
-	
+	for x in range(5):
+		for i in range(5):
+			newOrder("lorenzo", True)
+		for i in range(5):
+			newOrder("lorenzo2", False)
+		match()
+		time.sleep(5)
+
 setup()
-time.sleep(4)
-match()
+

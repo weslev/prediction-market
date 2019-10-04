@@ -5,9 +5,6 @@ import Card from "./Card.js";
 import Graph from "./Graph.js";
 /* eslint-disable no-unused-expressions */
 
-// Object.values(this.state.data).map((val) => {
-//   
-// }) 
 class App extends Component {
 
   constructor(props) {
@@ -15,7 +12,6 @@ class App extends Component {
 
     let url = window.location.href.split("/")
     let participantID = url.pop()
-    let sessionID = url.pop()
 
     this.state = {
       "location": "main",
@@ -26,11 +22,9 @@ class App extends Component {
 
   componentDidMount() {
     M.AutoInit();
-  }
 
-  nice() {
-
-    axios.post("http://localhost:8000/oracle/", {"spec": "transactions"} )
+    setInterval(() => {
+      axios.post("http://localhost:8000/oracle/", {"spec": "transactions"} )
       .then(res => {
         let ob = {}
         Object.values(res.data).map((tx) => {
@@ -46,6 +40,7 @@ class App extends Component {
           "data": ob
         })
       })
+    }, 5000)
   }
 
   generateCards() {
@@ -56,7 +51,7 @@ class App extends Component {
         let graph = <Graph width={ 300 } height={ 300 } title={ side } data_vals={ this.state.data[key][side] } />
         graphs.push(graph)
       })
-      let component = <Card>{ graphs }</Card>
+      let component = <div className="col s6 m6 l6"><Card title={ key }>{ graphs }</Card></div>
       components.push(component)
     })
 
@@ -76,12 +71,12 @@ class App extends Component {
           return(
             <div className="container">
               <div className="row">
-                <button onClick={ this.nice.bind(this) }>Test</button>
+                <h5 className="center-align">Prediction Market</h5>
               </div>
               <div className="row">
-                <div className="col s6 m6 l6">
-                  { this.generateCards() }
-                </div>
+                  { 
+                    this.generateCards()
+                  }
               </div>
             </div>
           );
@@ -89,7 +84,7 @@ class App extends Component {
           return(
             <div className="container">
                 <div className="row">
-                  <button onClick={ this.nice.bind(this) }>Test</button>
+                  <h5 className="center-align">Prediction Market</h5>
                 </div>
             </div>
           )
