@@ -8,8 +8,8 @@ const Graph = props => {
 		<Plot className="col s6 m6 l6"
 			data={[
 				{
-					x: [...Array(props.data_vals.length).keys()],
-					y: props.data_vals,
+					x: [1,2,3],//[...Array(props.data_vals.length).keys()],
+					y: [2,6,3],//props.data_vals,
 					mode: 'lines',
 					marker: {color: 'blue'},
 				}

@@ -3,6 +3,7 @@ import axios from "axios";
 import M from 'materialize-css';
 import Card from "./Card.js";
 import Graph from "./Graph.js";
+import UserPage from './UserPage';
 /* eslint-disable no-unused-expressions */
 
 const App = props => {
@@ -13,9 +14,10 @@ const App = props => {
 
   // State management
   const [stateData, setStateData] = useState({});
-  const [location, setLocation] = useState("main"); 
+  const [location, setLocation] = useState("login"); 
   const [user, setUser] = useState(participantID);
 
+  /*
   useEffect(() => {
     M.AutoInit();
 
@@ -38,7 +40,8 @@ const App = props => {
       })
     }, 5000);
   }, []);
-  
+  */
+
   // Function of generating cards
   const generateCards = () => {
     // Array of components
@@ -72,6 +75,7 @@ const App = props => {
           { 
             generateCards()
           }
+          <Graph width={ 300 } height={ 300 } title={ "test" }/>
       </div>
     </div>
   );
@@ -83,12 +87,13 @@ const App = props => {
         <h5 className="center-align">Default</h5>
       </div>
     </div>
-  )
+  );
 
   // The login page
   const loginPage = (
     <div>
       <h2>Login</h2>
+      <UserPage></UserPage>
     </div>
   );
 
